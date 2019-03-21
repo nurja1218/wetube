@@ -3,9 +3,5 @@
   "version": "1.0.0",
   "description": "Cloning Youtube with Vailla and nodeJS",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "jun young lim",
-  "license": "ISC"
+  "author": "jun young lim"
 }
