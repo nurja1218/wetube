@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "description": "Cloning Youtube with Vailla and nodeJS",
   "main": "index.js",
-  "author": "jun young lim",
-  "dependencies": {
-    "express": "^4.16.4"
-  }
+  "author": "jun young lim"
 }
