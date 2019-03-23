@@ -10,7 +10,7 @@
     "express": "^4.16.4"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "babel-node index.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.4.2"
