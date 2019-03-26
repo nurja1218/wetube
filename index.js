@@ -4,15 +4,20 @@ const app = express();
 const PORT = 4000;
 
 const handleListening = () => 
-console.log(`Listening on: http://localhost:${PORT}`);
+    console.log(`Listening on: http://localhost:${PORT}`);
 
 const handleHome = (req, res) => res.send('Hello from Guri');
 
 const handleProfile = (req, res) => res.send('You are on my Profile');
 
-const betweenHome = () => console.log("I'm between");
+const betweenHome = (req, res, next) => {
+    console.log("between");
+    next();
+}
 
-app.get("/", betweenHome ,handleHome);
+app.use(betweenHome);
+
+app.get("/", handleHome);
 
 app.get("/profile", handleProfile);
 
