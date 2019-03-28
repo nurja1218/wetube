@@ -1,7 +1,10 @@
 header.header
     .header__colum
         a(href=routes.home)
-        i.fab.fa-youtube
+            i.fab.fa-youtube
+    .header__colum
+        form(action=routes.search, method="get")
+            input(type="text", placeholder="Enter your clue.." ,name="clue")
     .header__colum
         ul
             li
