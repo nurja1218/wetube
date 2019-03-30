@@ -7,7 +7,7 @@ export const search = (req, res) => {
     const {
         query: { clue: outcome }
     } = req;
-    res.render("search", { pageTitle: "Search", outcome});
+    res.render("search", { pageTitle: "Search", outcome, videos});
 };
 
 export const upload = (req, res) => res.render("upload", { pageTitle: "Upload" });
