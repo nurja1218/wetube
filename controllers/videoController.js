@@ -11,11 +11,17 @@ export const home = async (req, res) => {
   }
 };
 
-export const search = (req, res) => {
+export const search = async (req, res) => {
   const {
     query: { clue: outcome }
   } = req;
-  res.render("search", { pageTitle: "Search", outcome });
+  let videos = [];
+  try {
+    videos = await Video.find({ title: { $regex: outcome, $options: "i" } });
+  } catch (error) {
+    console.log(error);
+  }
+  res.render("search", { pageTitle: "Search", outcome, videos });
 };
 
 export const getUpload = (req, res) =>
