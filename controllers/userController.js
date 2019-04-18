@@ -5,12 +5,12 @@ import User from "../models/User";
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "Join" });
 };
-export const postJoin = async (req, res) => {
+
+export const postJoin = async (req, res, next) => {
   const {
     body: { name, email, password, password2 }
   } = req;
   if (password !== password2) {
-    console.log(req.body);
     res.status(400);
     res.render("join", { pageTitle: "Join" });
   } else {
