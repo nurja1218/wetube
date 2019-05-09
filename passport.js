@@ -2,11 +2,11 @@ import passport from "passport";
 import GithubStrategy from "passport-github";
 import FacebookStrategy from "passport-facebook";
 import User from "./models/User";
-import routes from "./routes";
 import {
   githubLoginCallback,
   facebookLoginCallback
 } from "./controllers/userController";
+import routes from "./routes";
 
 passport.use(User.createStrategy());
 
