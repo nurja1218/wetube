@@ -1,5 +1,6 @@
 import routes from "../routes";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 
 // Home
 
@@ -58,10 +59,12 @@ export const videoDetail = async (req, res) => {
     params: { id }
   } = req;
   try {
-    const video = await Video.findById(id).populate("creator");
-    console.log(video);
+    const video = await Video.findById(id)
+      .populate("creator")
+      .populate("comments");
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
+    console.log(error);
     res.redirect(routes.home);
   }
 };
@@ -74,12 +77,16 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    if (video.creator !== req.user.id) {
+    console.log(video.creator);
+    console.log(req.user.id);
+    if (video.creator === req.user.id) {
+      console.log("error is here!");
       throw Error();
     } else {
       res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
     }
   } catch (error) {
+    console.log(error);
     res.redirect(routes.home);
   }
 };
@@ -114,4 +121,99 @@ export const deleteVideo = async (req, res) => {
     console.log(error);
   }
   res.redirect(routes.home);
+};
+
+// Register Video View
+
+export const postRegisterView = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    video.views += 1;
+    video.save();
+    res.status(200);
+  } catch (error) {
+    res.status(400);
+    res.end();
+  } finally {
+    res.end();
+  }
+};
+
+// Add Comment
+
+export const postAddComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment },
+    user
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    const newComment = await Comment.create({
+      text: comment,
+      creator: user.id
+    });
+    video.comments.push(newComment.id);
+    video.save();
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+// Delete Comment
+
+export const postDeleteComment = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+  const comment = await Comment.findById(id);
+  try {
+    // *comment.creater는 객체이기 때문에 String값으로 변환해줘야함!!!!*
+    if (String(comment.creator) !== req.user.id) {
+      throw Error();
+    } else {
+      await Comment.findOneAndRemove({ _id: id });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+// Latest Comment Delete
+export const postLatestComment = async (req, res) => {
+  const {
+    body: { data }
+  } = req;
+  const count = 1 * data[0];
+  const content = String(data[1]);
+  const comment = await Comment.find({ creator: req.user.id, text: content })
+    .sort({ createdAt: -1 })
+    .limit(count);
+  const commentId = comment.map(function(doc) {
+    return doc.id;
+  });
+  const commentCreator = comment.map(function(doc) {
+    return doc.creator;
+  });
+  try {
+    if (String(commentCreator) !== req.user.id) {
+      console.log("param is defference!");
+      throw Error();
+    } else {
+      await Comment.findOneAndRemove({ _id: commentId });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  } finally {
+    res.end();
+  }
 };
